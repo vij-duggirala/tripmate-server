@@ -12,7 +12,7 @@ const router = express.Router();
 
 router
     .route('/login')
-    .get((req, res) => {
+    .post((req, res) => {
         res.cookie('user', 'replace-this-by-the-id-of-user', {
             httpOnly: true,
             signed: true
@@ -23,7 +23,7 @@ router
 
 router
     .route('/signup')
-    .get((req, res) => {
+    .post((req, res) => {
         return res.status(201).json({});
     });
 
