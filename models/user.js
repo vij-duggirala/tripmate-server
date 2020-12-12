@@ -10,13 +10,15 @@ const UserSchema = new mongoose.Schema({
     },
     aadhar: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     phone: {
         type: String,
         required: true,
         minlength: 10,
-        maxlength: 10
+        maxlength: 10,
+        unique: true
     },
     dob: {
         type: Date,
