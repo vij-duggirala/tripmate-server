@@ -4,10 +4,13 @@
  */
 
 const User = require('../models/user');
+const {decodeToken} = require('../utils/token');
 
 const authMiddleware = async (req, res, next) => {
-    if (req.signedCookies.user !== undefined) {
-        const user = await User.findById(req.signedCookies.user);
+    let token = req.headers['x-api-token'];
+    if (token !== undefined) {
+        token = decodeToken(token);
+        const user = await User.findById(token);
         if (!user) {
             return res.status(401).json({
                 success: false,

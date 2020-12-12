@@ -3,7 +3,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 const connectDB = require('./config/db');
@@ -18,15 +17,13 @@ const unauth = require('./routes/unauth');
 const guides = require('./routes/guides')
 
 const app = express();
-
-app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
 
 app.use(cors());
 app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 	res.header('Access-Control-Allow-Credentials', true);
-	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Api-Token');
 	next();
 });
 

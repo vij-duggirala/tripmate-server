@@ -9,22 +9,44 @@
 
 const express = require('express');
 const router = express.Router();
+const User = require('../models/user');
+const {createToken} = require('../utils/token');
 
 router
     .route('/login')
-    .post((req, res) => {
-        res.cookie('user', 'replace-this-by-the-id-of-user', {
-            httpOnly: true,
-            signed: true
-        });
-        return res.status(201).json({});
+    .post(async (req, res) => {
+        const body = req.body;
+        const user = await User.findOne({phone: body.phone});
+        if (!user) {
+            return res.status(404).json({
+                error: "Phone number not registered"
+            });
+        }
+        user.comparePassword(body.password, (err, matched) => {
+            if (err || !matched) return res.status(401).json({
+                error: 'Password incorrect'
+            });
+            return res.status(200).json({
+                token: createToken(user)
+            })
+        })
     });
 
 
 router
     .route('/signup')
-    .post((req, res) => {
-        return res.status(201).json({});
+    .post(async (req, res) => {
+        const body = req.body;
+        const user = new User(body);
+        user.save((err, doc) => {
+            console.log(err);
+            if (err) return res.status(500).json({
+                error: "Some error occured"
+            })
+            return res.status(200).json({
+                message: "Successfully signed up"
+            })
+        });
     });
 
 module.exports = router;
